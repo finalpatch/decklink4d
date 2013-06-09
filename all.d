@@ -1,6 +1,7 @@
 module decklink4d.all;
 public import decklink4d.port;
 public import decklinkapi;
+import std.bitmanip;
 
 // *************************** global functions
 version(Windows)
@@ -26,7 +27,7 @@ version(Windows)
 }
 else
 {
-  extern(C) {
+  extern(System) {
       IDeckLinkIterator CreateDeckLinkIteratorInstance ();
       IDeckLinkAPIInformation CreateDeckLinkAPIInformationInstance ();
       IDeckLinkGLScreenPreviewHelper CreateOpenGLScreenPreviewHelper ();
@@ -77,10 +78,7 @@ struct ComPtr(T)
 	{
 		void* p = null;
 		auto pp = &p;
-		version(Windows)
-			HRESULT hr = obj.QueryInterface(&I.iid, pp);
-		else
-			HRESULT hr = obj.QueryInterface(I.iid, pp);
+        HRESULT hr = obj.QueryInterface(getGuid(I.iid), pp);
 		if (hr != S_OK)
 			throw new Exception("no interface");
 		I target = cast(I)p;
@@ -92,6 +90,21 @@ struct ComPtr(T)
 	}
 private:
 	T obj;
+    
+    version(Windows)
+    {
+        // Windows QueryInterface needs a pointer
+        auto getGuid(const ref GUID guid) { return &guid; }
+    }
+    else
+    {
+        // DeckLinkAPI Mac GUIDs are endian swapped
+        auto getGuid(in GUID guid)
+        {
+            const GUID endianSwapped = { swapEndian(guid.Data1), swapEndian(guid.Data2), swapEndian(guid.Data3), guid.Data4 };
+            return endianSwapped;
+        }
+    }
 }
 
 class SmartIterator(ITERATOR, T)

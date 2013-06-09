@@ -20,7 +20,7 @@ void main()
 
 	version(Windows)
 	{
-	    HRESULT hr = CoInitialize(null);
+	    CoInitialize(null);
 	}
 	// print api version
 	auto info = ComPtr!IDeckLinkAPIInformation(CreateDeckLinkAPIInformationInstance());
