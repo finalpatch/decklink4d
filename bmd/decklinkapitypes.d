@@ -82,7 +82,7 @@ extern(System):
 		/+[out]+/ ubyte *minutes, 
 		/+[out]+/ ubyte *seconds, 
 		/+[out]+/ ubyte *frames);
-    HRESULT GetString(/+[out]+/ BSTR *timecode);
+    HRESULT GetString(/+[out]+/ BMDSTR *timecode);
     BMDTimecodeFlags GetFlags();
     HRESULT GetTimecodeUserBits(/+[out]+/ BMDTimecodeUserBits *userBits);
 };

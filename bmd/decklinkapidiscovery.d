@@ -42,6 +42,6 @@ interface IDeckLink : IUnknown
 {
 extern(System):
     static const GUID iid = { 0xC418FBDD,0x0587,0x48ED,[ 0x8F,0xE5,0x64,0x0F,0x0A,0x14,0xAF,0x91 ] };
-    HRESULT GetModelName(/+[out]+/ BSTR *modelName);
-    HRESULT GetDisplayName(/+[out]+/ BSTR *displayName);
+    HRESULT GetModelName(/+[out]+/ BMDSTR *modelName);
+    HRESULT GetDisplayName(/+[out]+/ BMDSTR *displayName);
 };

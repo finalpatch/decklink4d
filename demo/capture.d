@@ -24,7 +24,7 @@ void main()
 	}
 	// print api version
 	auto info = ComPtr!IDeckLinkAPIInformation(CreateDeckLinkAPIInformationInstance());
-	BMDStr str;
+	BMDSTR str;
 	info.GetString(BMDDeckLinkAPIVersion, &str);
 	string ver = consume(str);
 	writefln("DeckLink API version: "~ver);

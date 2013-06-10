@@ -156,8 +156,8 @@ extern(System):
     HRESULT SetFloat(in BMDDeckLinkConfigurationID cfgID, in double value);
     HRESULT GetFloat(in BMDDeckLinkConfigurationID cfgID, 
 		/+[out]+/ double *value);
-    HRESULT SetString(in BMDDeckLinkConfigurationID cfgID, in BSTR value);
+    HRESULT SetString(in BMDDeckLinkConfigurationID cfgID, in BMDSTR value);
     HRESULT GetString(in BMDDeckLinkConfigurationID cfgID, 
-		/+[out]+/ BSTR *value);
+		/+[out]+/ BMDSTR *value);
     HRESULT WriteConfigurationToPreferences();
 };

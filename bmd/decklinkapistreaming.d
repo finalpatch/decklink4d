@@ -239,7 +239,7 @@ interface IBMDStreamingVideoEncodingMode : IUnknown
 {
 extern(System):
     static const GUID iid = { 0x1AB8035B,0xCD13,0x458D,[ 0xB6,0xDF,0x5E,0x8F,0x7C,0x21,0x41,0xD9 ] };
-    HRESULT GetName(/+[out]+/ BSTR *name);
+    HRESULT GetName(/+[out]+/ BMDSTR *name);
     uint GetPresetID();
     uint GetSourcePositionX();
     uint GetSourcePositionY();
@@ -254,7 +254,7 @@ extern(System):
     HRESULT GetFloat(in BMDStreamingEncodingModePropertyID cfgID, 
 		/+[out]+/ double* value);
     HRESULT GetString(in BMDStreamingEncodingModePropertyID cfgID, 
-		/+[out]+/ BSTR *value);
+		/+[out]+/ BMDSTR *value);
     HRESULT CreateMutableVideoEncodingMode(/+[out]+/ IBMDStreamingMutableVideoEncodingMode * newEncodingMode);
 };
 
@@ -270,7 +270,7 @@ interface IBMDStreamingMutableVideoEncodingMode : IBMDStreamingVideoEncodingMode
     HRESULT SetFlag(in BMDStreamingEncodingModePropertyID cfgID, in BOOL value);
     HRESULT SetInt(in BMDStreamingEncodingModePropertyID cfgID, in LONGLONG value);
     HRESULT SetFloat(in BMDStreamingEncodingModePropertyID cfgID, in double value);
-    HRESULT SetString(in BMDStreamingEncodingModePropertyID cfgID, in BSTR value);
+    HRESULT SetString(in BMDStreamingEncodingModePropertyID cfgID, in BMDSTR value);
 };
 
 /* Interface IBMDStreamingVideoEncodingModePresetIterator - Enumerates encoding mode presets */

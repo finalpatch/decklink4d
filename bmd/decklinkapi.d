@@ -496,7 +496,7 @@ extern(System):
     HRESULT GetFloat(in BMDDeckLinkAPIInformationID cfgID, 
 		/+[out]+/ double *value);
     HRESULT GetString(in BMDDeckLinkAPIInformationID cfgID, 
-		/+[out]+/ BSTR *value);
+		/+[out]+/ BMDSTR *value);
 };
 
 /* Interface IDeckLinkOutput - Created by QueryInterface from IDeckLink. */
@@ -728,6 +728,8 @@ extern(System):
     HRESULT Set3DPreviewFormat(in BMD3DPreviewFormat previewFormat);
 };
 
+version (Windows)
+{
 /* Interface IDeckLinkDX9ScreenPreviewHelper - Created with CoCreateInstance(). */
 
 const GUID IID_IDeckLinkDX9ScreenPreviewHelper = IDeckLinkDX9ScreenPreviewHelper.iid;
@@ -741,6 +743,7 @@ extern(System):
     HRESULT SetFrame(/+[in]+/ IDeckLinkVideoFrame theFrame);
     HRESULT Set3DPreviewFormat(in BMD3DPreviewFormat previewFormat);
 };
+}
 
 /* Interface IDeckLinkNotificationCallback - DeckLink Notification Callback Interface */
 
@@ -780,7 +783,7 @@ extern(System):
     HRESULT GetFloat(in BMDDeckLinkAttributeID cfgID, 
 		/+[out]+/ double *value);
     HRESULT GetString(in BMDDeckLinkAttributeID cfgID, 
-		/+[out]+/ BSTR *value);
+		/+[out]+/ BMDSTR *value);
 };
 
 /* Interface IDeckLinkKeyer - DeckLink Keyer interface */

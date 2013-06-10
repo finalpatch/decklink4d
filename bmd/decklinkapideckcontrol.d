@@ -203,7 +203,7 @@ extern(System):
 		/+[out]+/ BMDDeckControlError *error);
     HRESULT Shuttle(in double rate, 
 		/+[out]+/ BMDDeckControlError *error);
-    HRESULT GetTimecodeString(/+[out]+/ BSTR *currentTimeCode, 
+    HRESULT GetTimecodeString(/+[out]+/ BMDSTR *currentTimeCode, 
 		/+[out]+/ BMDDeckControlError *error);
     HRESULT GetTimecode(/+[out]+/ IDeckLinkTimecode *currentTimecode, 
 		/+[out]+/ BMDDeckControlError *error);

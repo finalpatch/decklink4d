@@ -37,6 +37,10 @@ version(OSX)
     alias const(GUID)* REFGUID, REFIID, REFCLSID, REFFMTID;
 
     alias int HRESULT;
+	alias long LONGLONG;
+	alias ulong ULONGLONG;
+	alias int BOOL;
+	
     enum S_OK = 0;
 
     const GUID IID_IUnknown = IUnknown.iid;
@@ -59,7 +63,7 @@ version(OSX)
     alias size_t CFIndex;
     alias uint CFStringEncoding;
     alias ubyte Boolean;
-    alias CFStringRef BMDStr;
+    alias CFStringRef BMDSTR;
 
     enum {
         kCFStringEncodingMacRoman = 0,
@@ -99,7 +103,7 @@ version(OSX)
 // *************************** COM String helper
 version(Windows)
 {
-    alias BSTR BMDStr;
+    alias BSTR BMDSTR;
     extern(Windows) uint SysStringLen(BSTR bstr);
     extern(Windows) uint SysFreeString(BSTR bstr);
     string consume(BSTR bstr)

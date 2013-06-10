@@ -154,7 +154,7 @@ interface IDeckLinkDisplayMode : IUnknown
 {
 extern(System):
     static const GUID iid = { 0x3EB2C1AB,0x0A3D,0x4523,[ 0xA3,0xAD,0xF4,0x0D,0x7F,0xB1,0x4E,0x78 ] };
-    HRESULT GetName(/+[out]+/ BSTR *name);
+    HRESULT GetName(/+[out]+/ BMDSTR *name);
     BMDDisplayMode GetDisplayMode();
     int GetWidth();
     int GetHeight();
