@@ -41,7 +41,22 @@ version(OSX)
 	alias ulong ULONGLONG;
 	alias int BOOL;
 	
-    enum S_OK = 0;
+	enum : int
+	{
+        S_OK = 0,
+        S_FALSE = 0x00000001,
+        NOERROR = 0,
+        E_NOTIMPL     = cast(int)0x80004001,
+        E_NOINTERFACE = cast(int)0x80004002,
+        E_POINTER     = cast(int)0x80004003,
+        E_ABORT       = cast(int)0x80004004,
+        E_FAIL        = cast(int)0x80004005,
+        E_HANDLE      = cast(int)0x80070006,
+        CLASS_E_NOAGGREGATION = cast(int)0x80040110,
+        E_OUTOFMEMORY = cast(int)0x8007000E,
+        E_INVALIDARG  = cast(int)0x80070057,
+        E_UNEXPECTED  = cast(int)0x8000FFFF,
+	}
 
     const GUID IID_IUnknown = IUnknown.iid;
   

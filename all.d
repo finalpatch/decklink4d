@@ -148,10 +148,10 @@ private:
 mixin template NullIUnknownImpl()
 {
 	version(Windows)
-		extern(System) public override HRESULT QueryInterface(const(IID)* riid, void** pvObject)  {return -1;}
+		extern(System) public override HRESULT QueryInterface(const(IID)* riid, void** pvObject)  {return E_NOINTERFACE;}
 
     else
-    	extern(System) public override HRESULT QueryInterface(IID riid, void** ppv) {return -1;}
+    	extern(System) public override HRESULT QueryInterface(IID riid, void** ppv) {return E_NOINTERFACE;}
     extern(System) public override uint AddRef() { return 2; }
     extern(System) public override uint Release() { return 1; }
 }
