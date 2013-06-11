@@ -2,6 +2,7 @@ module decklink4d.all;
 public import decklink4d.port;
 public import decklinkapi;
 import std.bitmanip;
+import std.traits;
 
 // *************************** global functions
 version(Windows)
@@ -107,13 +108,13 @@ private:
     }
 }
 
-class SmartIterator(ITERATOR, T)
+class SmartIterator(ITERATOR)
 {
 public:
 	// takes ownership
 	this(ITERATOR it)
 	{
-		m_iterator = ComPtr!IDeckLinkIterator(it);
+		m_iterator = ComPtr!ITERATOR(it);
 		m_next = getNext();
 	}
 	bool empty()
@@ -130,14 +131,17 @@ public:
 			m_next = getNext();
 	}
 private:
-	ComPtr!IDeckLinkIterator m_iterator;
-	ComPtr!IDeckLink m_next;
+	// figure out the interface type being iterated by this iterator
+	alias PointerTarget!(ParameterTypeTuple!(ITERATOR.Next)[0]) INTERFACE;
 	
-	ComPtr!IDeckLink getNext()
+	ComPtr!ITERATOR  m_iterator;
+	ComPtr!INTERFACE m_next;
+	
+	ComPtr!INTERFACE getNext()
 	{
-		T next;
+		INTERFACE next;
 		HRESULT hr = m_iterator.Next(&next);
-		return ComPtr!T((hr == S_OK) ? next : null);
+		return ComPtr!INTERFACE((hr == S_OK) ? next : null);
 	}
 }
 
@@ -150,4 +154,12 @@ mixin template NullIUnknownImpl()
     	extern(System) public override HRESULT QueryInterface(IID riid, void** ppv) {return -1;}
     extern(System) public override uint AddRef() { return 2; }
     extern(System) public override uint Release() { return 1; }
+}
+
+auto getDefaultDevice()
+{
+	auto i = new SmartIterator!IDeckLinkIterator(CreateDeckLinkIteratorInstance());
+	foreach(decklink; i)
+		return decklink;
+	throw new Exception("no decklink device");
 }

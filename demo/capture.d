@@ -1,17 +1,8 @@
 import decklink4d.all;
 import std.stdio;
-import core.thread;
 
 import derelict.opengl3.gl3;
 import derelict.glfw3.glfw3;
-
-auto getFirstDevice()
-{
-	auto i = new SmartIterator!(IDeckLinkIterator, IDeckLink)(CreateDeckLinkIteratorInstance());
-	foreach(decklink; i)
-		return decklink;
-	throw new Exception("no decklink device");
-}
 
 void main()
 {
@@ -30,7 +21,7 @@ void main()
 	writefln("DeckLink API version: "~ver);
 
 	// try grab the first decklink device
-	auto decklink = getFirstDevice();
+	auto decklink = getDefaultDevice();
 
 	// print device name
 	decklink.GetDisplayName(&str);
