@@ -31,8 +31,8 @@ else
       IDeckLinkIterator CreateDeckLinkIteratorInstance ();
       IDeckLinkAPIInformation CreateDeckLinkAPIInformationInstance ();
       IDeckLinkGLScreenPreviewHelper CreateOpenGLScreenPreviewHelper ();
-      // IDeckLinkCocoaScreenPreviewCallback* CreateCocoaScreenPreview (void* /* (NSView*) */ parentView);
-      // IDeckLinkVideoConversion* CreateVideoConversionInstance ();
+      IDeckLinkCocoaScreenPreviewCallback CreateCocoaScreenPreview (void* /* (NSView*) */ parentView);
+      IDeckLinkVideoConversion CreateVideoConversionInstance ();
   }
 }
 

@@ -730,20 +730,31 @@ extern(System):
 
 version (Windows)
 {
-/* Interface IDeckLinkDX9ScreenPreviewHelper - Created with CoCreateInstance(). */
+	/* Interface IDeckLinkDX9ScreenPreviewHelper - Created with CoCreateInstance(). */
 
-const GUID IID_IDeckLinkDX9ScreenPreviewHelper = IDeckLinkDX9ScreenPreviewHelper.iid;
+	const GUID IID_IDeckLinkDX9ScreenPreviewHelper = IDeckLinkDX9ScreenPreviewHelper.iid;
 
-interface IDeckLinkDX9ScreenPreviewHelper : IUnknown
-{
-extern(System):
-    static const GUID iid = { 0x2094B522,0xD1A1,0x40C0,[ 0x9A,0xC7,0x1C,0x01,0x22,0x18,0xEF,0x02 ] };
-    HRESULT Initialize(in void *device);
-    HRESULT Render(in RECT *rc);
-    HRESULT SetFrame(/+[in]+/ IDeckLinkVideoFrame theFrame);
-    HRESULT Set3DPreviewFormat(in BMD3DPreviewFormat previewFormat);
-};
+	interface IDeckLinkDX9ScreenPreviewHelper : IUnknown
+	{
+	extern(System):
+		static const GUID iid = { 0x2094B522,0xD1A1,0x40C0,[ 0x9A,0xC7,0x1C,0x01,0x22,0x18,0xEF,0x02 ] };
+		HRESULT Initialize(in void *device);
+		HRESULT Render(in RECT *rc);
+		HRESULT SetFrame(/+[in]+/ IDeckLinkVideoFrame theFrame);
+		HRESULT Set3DPreviewFormat(in BMD3DPreviewFormat previewFormat);
+	};
 }
+
+version (OSX)
+{
+	const GUID IID_IDeckLinkCocoaScreenPreviewCallback = IDeckLinkCocoaScreenPreviewCallback.iid;
+	
+	interface IDeckLinkCocoaScreenPreviewCallback : IDeckLinkScreenPreviewCallback
+	{
+		static const GUID iid = { 0xD174152F,0x8F96,0x4C07,[0x83,0xA5,0xDD,0x5F,0x5A,0xF0,0xA2,0xAA] };
+	}
+}
+
 
 /* Interface IDeckLinkNotificationCallback - DeckLink Notification Callback Interface */
 
