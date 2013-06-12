@@ -47,7 +47,8 @@ void main()
 		override HRESULT ScheduledPlaybackHasStopped() { return S_OK; }
 	}	
 
-	output.SetScheduledFrameCompletionCallback(new FrameCompletionCallback);
+	auto cb = new FrameCompletionCallback;
+	output.SetScheduledFrameCompletionCallback(cb);
 	output.EnableVideoOutput(bmdModeHD1080i50, bmdVideoOutputFlagDefault);
 
 	// preroll
