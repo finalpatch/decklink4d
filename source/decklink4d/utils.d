@@ -3,91 +3,92 @@ public import decklink4d.port;
 public import decklink4d.bmd.decklinkapi;
 import std.bitmanip;
 import std.traits;
+import std.stdio;
 
 // *************************** global functions
 version(Windows)
 {
-      IDeckLinkIterator CreateDeckLinkIteratorInstance ()
-      {
+    IDeckLinkIterator CreateDeckLinkIteratorInstance ()
+    {
         IDeckLinkIterator p;
         HRESULT hr=CoCreateInstance(&CLSID_CDeckLinkIterator, null, CLSCTX_ALL, &IID_IDeckLinkIterator, &p);
         return (hr == S_OK) ? p : null;
-      }
-      IDeckLinkGLScreenPreviewHelper CreateOpenGLScreenPreviewHelper()
-      {
+    }
+    IDeckLinkGLScreenPreviewHelper CreateOpenGLScreenPreviewHelper()
+    {
         IDeckLinkGLScreenPreviewHelper p;
         HRESULT hr=CoCreateInstance(&CLSID_CDeckLinkGLScreenPreviewHelper, null, CLSCTX_ALL, &IID_IDeckLinkGLScreenPreviewHelper, &p);
         return (hr == S_OK) ? p : null;
-      }
+    }
 }
 else
 {
-  extern(System) {
-      IDeckLinkIterator CreateDeckLinkIteratorInstance ();
-      IDeckLinkGLScreenPreviewHelper CreateOpenGLScreenPreviewHelper ();
-      IDeckLinkCocoaScreenPreviewCallback CreateCocoaScreenPreview (void* /* (NSView*) */ parentView);
-      IDeckLinkVideoConversion CreateVideoConversionInstance ();
-  }
+    extern(System) {
+        IDeckLinkIterator CreateDeckLinkIteratorInstance ();
+        IDeckLinkGLScreenPreviewHelper CreateOpenGLScreenPreviewHelper ();
+        IDeckLinkCocoaScreenPreviewCallback CreateCocoaScreenPreview (void* /* (NSView*) */ parentView);
+        IDeckLinkVideoConversion CreateVideoConversionInstance ();
+    }
 }
 
 // *************************** COM helper classes
 struct ComPtr(T)
 {
-	// takes ownership
-	this(T o)
-	{
-		obj = o;
-		if (!isNull)
-		{
-			trace("comobj %s: %s", T.stringof, &obj);
-		}
-	}
-	~this()
-	{
-		if (!isNull)
-		{
-			auto count = obj.Release();
-			trace("destructing %s: %s => %s", T.stringof, &obj, count);
-		}
-	}
-	this(this)
-	{
-		if (!isNull)
-		{
-			auto count = obj.AddRef();
-			trace("postblt %s: %s => %s", T.stringof, &obj, count);
-		}
-	}
-	@property bool isNull()
-	{
-		return obj is null;
-	}
-	int opDispatch(string op, T...)(T args)
-	{
-		static assert(op != "QueryInterface" && op != "AddRef" && op != "Release");
-		return mixin("obj."~op~"(args)");
-	}
+    // takes ownership
+    this(T o)
+    {
+        obj = o;
+        if (!isNull)
+        {
+            trace("comobj %s: %s", T.stringof, &obj);
+        }
+    }
+    ~this()
+    {
+        if (!isNull)
+        {
+            auto count = obj.Release();
+            trace("destructing %s: %s => %s", T.stringof, &obj, count);
+        }
+    }
+    this(this)
+    {
+        if (!isNull)
+        {
+            auto count = obj.AddRef();
+            trace("postblt %s: %s => %s", T.stringof, &obj, count);
+        }
+    }
+    @property bool isNull()
+    {
+        return obj is null;
+    }
+    int opDispatch(string op, T...)(T args)
+    {
+        static assert(op != "QueryInterface" && op != "AddRef" && op != "Release");
+        return mixin("obj."~op~"(args)");
+    }
 
-	ComPtr!I comcast(I)()
-	{
-		void* p = null;
-		auto pp = &p;
+    ComPtr!I comcast(I)()
+    {
+        void* p = null;
+        auto pp = &p;
         HRESULT hr = obj.QueryInterface(getGuid(I.iid), pp);
-		if (hr != S_OK)
-			throw new Exception("no interface");
-		I target = cast(I)p;
-		return ComPtr!I(target);
-	}
-	@property T ptr()
-	{
-		return obj;
-	}
-	@property T* outArg()
-	{
-		return &obj;
-	}
+        if (hr != S_OK)
+            throw new Exception("no interface");
+        I target = cast(I)p;
+        return ComPtr!I(target);
+    }
+    @property T ptr()
+    {
+        return obj;
+    }
+    @property T* outArg()
+    {
+        return &obj;
+    }
 private:
-	T obj;
+    T obj;
     
     version(Windows)
     {
@@ -108,38 +109,38 @@ private:
 class SmartIterator(ITERATOR)
 {
 public:
-	// takes ownership
-	this(ITERATOR it)
-	{
-		m_iterator = ComPtr!ITERATOR(it);
-		m_next = getNext();
-	}
-	bool empty()
-	{
-		return m_next.isNull();
-	}
-	auto front()
-	{
-		return m_next;
-	}
-	void popFront()
-	{
-		if (!(m_next.isNull))
-			m_next = getNext();
-	}
+    // takes ownership
+    this(ITERATOR it)
+    {
+        m_iterator = ComPtr!ITERATOR(it);
+        m_next = getNext();
+    }
+    bool empty()
+    {
+        return m_next.isNull();
+    }
+    auto front()
+    {
+        return m_next;
+    }
+    void popFront()
+    {
+        if (!(m_next.isNull))
+            m_next = getNext();
+    }
 private:
-	// figure out the interface type being iterated by this iterator
-	alias PointerTarget!(ParameterTypeTuple!(ITERATOR.Next)[0]) INTERFACE;
-	
-	ComPtr!ITERATOR  m_iterator;
-	ComPtr!INTERFACE m_next;
-	
-	ComPtr!INTERFACE getNext()
-	{
-		INTERFACE next;
-		HRESULT hr = m_iterator.Next(&next);
-		return ComPtr!INTERFACE((hr == S_OK) ? next : null);
-	}
+    // figure out the interface type being iterated by this iterator
+    alias PointerTarget!(ParameterTypeTuple!(ITERATOR.Next)[0]) INTERFACE;
+    
+    ComPtr!ITERATOR  m_iterator;
+    ComPtr!INTERFACE m_next;
+    
+    ComPtr!INTERFACE getNext()
+    {
+        INTERFACE next;
+        HRESULT hr = m_iterator.Next(&next);
+        return ComPtr!INTERFACE((hr == S_OK) ? next : null);
+    }
 }
 
 import core.memory;
@@ -147,12 +148,12 @@ import core.atomic;
 
 class ComObj : IUnknown
 {
-	private int m_refCount = 0;
+    private int m_refCount = 0;
 
 protected:
-	// derived class override this
-	HRESULT RealQueryInterface(const(IID)* riid, void** ppv)
-	{
+    // derived class override this
+    HRESULT RealQueryInterface(const(IID)* riid, void** ppv)
+    {
         if (*riid == IID_IUnknown)
         {
             *ppv = cast(void*)cast(IUnknown)this;
@@ -163,51 +164,66 @@ protected:
         {   *ppv = null;
             return E_NOINTERFACE;
         }
-	}
-public:
-	this()
-	{
-		// pin this object down
-		GC.addRoot(cast(void*)this);
-		GC.setAttr(cast(void*)this, GC.BlkAttr.NO_MOVE);
-	}
+    }
 extern(System):
-	version(Windows)
-	{
-		override HRESULT QueryInterface(const(IID)* riid, void** ppv)
-		{
-			return RealQueryInterface(riid, ppv);
-		}
-	}
+    version(Windows)
+    {
+        override HRESULT QueryInterface(const(IID)* riid, void** ppv)
+        {
+            return RealQueryInterface(riid, ppv);
+        }
+    }
     else
-	{
-    	override HRESULT QueryInterface(IID riid, void** ppv)
-		{
-			return RealQueryInterface(&riid, ppv);
-		}
-	}
+    {
+        override HRESULT QueryInterface(IID riid, void** ppv)
+        {
+            return RealQueryInterface(&riid, ppv);
+        }
+    }
     override uint AddRef()
-	{
-        return atomicOp!"+="(*cast(shared)&m_refCount, 1);
-	}
+    {
+        int lRef = atomicOp!"+="(*cast(shared)&m_refCount, 1);
+        version(DEBUG)
+        {
+            scope(exit)
+                writefln("addref->%s", lRef);
+        }
+        if (lRef == 1)
+        {
+            // pin this object down
+            version(DEBUG)
+            {
+                writefln("pinned");
+            }
+            GC.addRoot(cast(void*)this);
+            GC.setAttr(cast(void*)this, GC.BlkAttr.NO_MOVE);
+        }
+        return lRef;
+    }
     override uint Release()
-	{
+    {
         int lRef = atomicOp!"-="(*cast(shared)&m_refCount, 1);
+        version(DEBUG)
+        {
+            scope(exit)
+                writefln("release->%s", lRef);
+        }
         if (lRef == 0)
         {
-			// okay to collect now
-			GC.removeRoot(cast(void*)this);
-			GC.clrAttr(cast(void*)this, GC.BlkAttr.NO_MOVE);
+            // okay to collect now
+            writefln("unpinned");
+            GC.removeRoot(cast(void*)this);
+            GC.clrAttr(cast(void*)this, GC.BlkAttr.NO_MOVE);
             return 0;
         }
         return lRef;
-	}
+    }
 }
 
 auto getDefaultDevice()
 {
-	auto i = new SmartIterator!IDeckLinkIterator(CreateDeckLinkIteratorInstance());
-	foreach(decklink; i)
-		return decklink;
-	throw new Exception("no decklink device");
+    auto i = new SmartIterator!IDeckLinkIterator(CreateDeckLinkIteratorInstance());
+    foreach(decklink; i)
+        return decklink;
+    throw new Exception("no decklink device");
 }
