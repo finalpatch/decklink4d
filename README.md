@@ -13,8 +13,6 @@ DeckLink SDK for the D programming language
 	},
 
   On Mac, you need to tell the compiler to compile for 32-bit because right now
-  64-bit does not work due to a compiler issue.  You also need to link in the
-  required frameworks:
+  64-bit does not work due to a compiler issue:
   
 	"dflags": [ "-m32" ],
-	"lflags": [ "-framework", "DeckLinkAPI", "-framework", "CoreFoundation" ],

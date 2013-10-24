@@ -4,5 +4,7 @@
 	"license" : "public domain",
 	"authors": ["finalpatch"],
 	"dependencies": {
-	}
+	},
+    "libs-windows" : ["ole32", "oleaut32"],
+    "lflags-osx": ["-framework", "DeckLinkAPI", "-framework", "CoreFoundation"],
 }
