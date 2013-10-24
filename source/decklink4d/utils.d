@@ -1,18 +1,12 @@
-module decklink4d.all;
+module decklink4d.utils;
 public import decklink4d.port;
-public import decklinkapi;
+public import decklink4d.bmd.decklinkapi;
 import std.bitmanip;
 import std.traits;
 
 // *************************** global functions
 version(Windows)
 {
-      IDeckLinkAPIInformation CreateDeckLinkAPIInformationInstance ()
-      {
-        IDeckLinkAPIInformation p;
-        HRESULT hr=CoCreateInstance(&CLSID_CDeckLinkAPIInformation, null, CLSCTX_ALL, &IID_IDeckLinkAPIInformation, &p);
-        return (hr == S_OK) ? p : null;
-      }
       IDeckLinkIterator CreateDeckLinkIteratorInstance ()
       {
         IDeckLinkIterator p;
@@ -30,7 +24,6 @@ else
 {
   extern(System) {
       IDeckLinkIterator CreateDeckLinkIteratorInstance ();
-      IDeckLinkAPIInformation CreateDeckLinkAPIInformationInstance ();
       IDeckLinkGLScreenPreviewHelper CreateOpenGLScreenPreviewHelper ();
       IDeckLinkCocoaScreenPreviewCallback CreateCocoaScreenPreview (void* /* (NSView*) */ parentView);
       IDeckLinkVideoConversion CreateVideoConversionInstance ();

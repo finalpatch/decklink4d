@@ -13,8 +13,10 @@ void main()
 	{
 	    CoInitialize(null);
 	}
+	
 	// print api version
-	auto info = ComPtr!IDeckLinkAPIInformation(CreateDeckLinkAPIInformationInstance());
+	auto it = ComPtr!IDeckLinkIterator(CreateDeckLinkIteratorInstance());
+	auto info = it.comcast!IDeckLinkAPIInformation();
 	BMDSTR str;
 	info.GetString(BMDDeckLinkAPIVersion, &str);
 	string ver = consume(str);

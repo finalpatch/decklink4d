@@ -7,8 +7,6 @@ version(Windows)
     alias OLECHAR* BSTR;
 }
 
-version = DEBUG;
-
 version(DEBUG)
 {
     import std.stdio;
