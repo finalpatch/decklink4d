@@ -89,6 +89,10 @@ struct ComPtr(T)
 	{
 		return obj;
 	}
+	@property T* outArg()
+	{
+		return &obj;
+	}
 private:
 	T obj;
     

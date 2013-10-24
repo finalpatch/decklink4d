@@ -40,6 +40,12 @@ void main()
 
 	// hook input frame callback
 	auto input = decklink.comcast!IDeckLinkInput();
+
+	BMDDisplayModeSupport support;
+	ComPtr!IDeckLinkDisplayMode resultMode;
+	input.DoesSupportVideoMode(bmdModeHD1080i50, bmdFormat8BitYUV, 0, &support, resultMode.outArg);
+	writefln("support 1080i50: %s", support);
+	
 	auto cb = new class IDeckLinkInputCallback
 		{
 			mixin NullIUnknownImpl;
