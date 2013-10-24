@@ -115,6 +115,11 @@ public:
         m_iterator = ComPtr!ITERATOR(it);
         m_next = getNext();
     }
+    this(ComPtr!ITERATOR it)
+    {
+        m_iterator = it;
+        m_next = getNext();
+    }
     bool empty()
     {
         return m_next.isNull();
