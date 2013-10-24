@@ -5,6 +5,11 @@
 	"authors": ["finalpatch"],
 	"dependencies": {
 	},
-    "libs-windows" : ["ole32", "oleaut32"],
-    "lflags-osx": ["-framework", "DeckLinkAPI", "-framework", "CoreFoundation"],
+    "libs-windows" : [
+		"ole32",
+		"oleaut32"],
+    "lflags-osx": [
+		"-F/Library/Frameworks",
+		"-framework", "DeckLinkAPI",
+		"-framework", "CoreFoundation"],
 }
