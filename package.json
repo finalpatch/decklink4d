@@ -1,6 +1,7 @@
 {
 	"name": "decklink4d",
 	"description": "D Binding for Blackmagic DeckLink API",
+	"license" : "public domain",
 	"authors": ["finalpatch"],
 	"dependencies": {
 	}
