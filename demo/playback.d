@@ -36,7 +36,7 @@ void main()
 	}
 	class FrameCompletionCallback : IDeckLinkVideoOutputCallback
 	{
-		mixin NullIUnknownImpl;
+		mixin SimpleIUnknownImpl;
 	public:
 		override HRESULT ScheduledFrameCompleted(IDeckLinkVideoFrame completedFrame, in BMDOutputFrameCompletionResult result)
 		{

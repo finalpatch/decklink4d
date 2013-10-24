@@ -142,15 +142,39 @@ private:
 	}
 }
 
-mixin template NullIUnknownImpl()
+import core.memory;
+import core.atomic;
+
+mixin template SimpleIUnknownImpl()
 {
+	private int m_refCount = 0;
+	this()
+	{
+		// pin this object down
+		GC.addRoot(cast(void*)this);
+		GC.setAttr(cast(void*)this, GC.BlkAttr.NO_MOVE);
+	}
 	version(Windows)
 		extern(System) public override HRESULT QueryInterface(const(IID)* riid, void** pvObject)  {return E_NOINTERFACE;}
 
     else
     	extern(System) public override HRESULT QueryInterface(IID riid, void** ppv) {return E_NOINTERFACE;}
-    extern(System) public override uint AddRef() { return 2; }
-    extern(System) public override uint Release() { return 1; }
+    extern(System) public override uint AddRef()
+	{
+        return atomicOp!"+="(*cast(shared)&m_refCount, 1);
+	}
+    extern(System) public override uint Release()
+	{
+        int lRef = atomicOp!"-="(*cast(shared)&m_refCount, 1);
+        if (lRef == 0)
+        {
+			// okay to collect now
+			GC.removeRoot(cast(void*)this);
+			GC.clrAttr(cast(void*)this, GC.BlkAttr.NO_MOVE);
+            return 0;
+        }
+        return lRef;
+	}
 }
 
 auto getDefaultDevice()

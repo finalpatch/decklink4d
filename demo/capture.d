@@ -50,7 +50,7 @@ void main()
 	
 	auto cb = new class IDeckLinkInputCallback
 		{
-			mixin NullIUnknownImpl;
+			mixin SimpleIUnknownImpl;
 		public:
     		override HRESULT VideoInputFormatChanged(in BMDVideoInputFormatChangedEvents notificationEvents, IDeckLinkDisplayMode newDisplayMode, in BMDDetectedVideoInputFormatFlags detectedSignalFlags)
     		{
