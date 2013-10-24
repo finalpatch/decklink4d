@@ -142,8 +142,8 @@ private:
 	}
 }
 
-import core.memory;
-import core.atomic;
+public import core.memory;
+public import core.atomic;
 
 mixin template SimpleIUnknownImpl()
 {
