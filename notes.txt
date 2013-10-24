@@ -1,0 +1,11 @@
+* interfaces must derive from IUnknown
+  compiler does special things to create COM compatible interface for IUnknown
+
+* on mac the iid in queryinterface is passed by value
+  D's x64 calling convention is not consistent with extern(C) when passing structs by values so 64-bit doesn't work on Macs.
+
+* mac uuids are big endian
+
+* on osx methods must be marked extern(C)
+  by default D compiler makes COM methods extern(Windows)
+  extern(System) => extern(C) on Mac and extern(Windows) on Windows
