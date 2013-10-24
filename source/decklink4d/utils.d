@@ -142,28 +142,55 @@ private:
 	}
 }
 
-public import core.memory;
-public import core.atomic;
+import core.memory;
+import core.atomic;
 
-mixin template SimpleIUnknownImpl()
+class ComObj : IUnknown
 {
 	private int m_refCount = 0;
+
+protected:
+	// derived class override this
+	HRESULT RealQueryInterface(const(IID)* riid, void** ppv)
+	{
+        if (*riid == IID_IUnknown)
+        {
+            *ppv = cast(void*)cast(IUnknown)this;
+            AddRef();
+            return S_OK;
+        }
+        else
+        {   *ppv = null;
+            return E_NOINTERFACE;
+        }
+	}
+public:
 	this()
 	{
 		// pin this object down
 		GC.addRoot(cast(void*)this);
 		GC.setAttr(cast(void*)this, GC.BlkAttr.NO_MOVE);
 	}
+extern(System):
 	version(Windows)
-		extern(System) public override HRESULT QueryInterface(const(IID)* riid, void** pvObject)  {return E_NOINTERFACE;}
-
+	{
+		override HRESULT QueryInterface(const(IID)* riid, void** ppv)
+		{
+			return RealQueryInterface(riid, ppv);
+		}
+	}
     else
-    	extern(System) public override HRESULT QueryInterface(IID riid, void** ppv) {return E_NOINTERFACE;}
-    extern(System) public override uint AddRef()
+	{
+    	override HRESULT QueryInterface(IID riid, void** ppv)
+		{
+			return RealQueryInterface(&riid, ppv);
+		}
+	}
+    override uint AddRef()
 	{
         return atomicOp!"+="(*cast(shared)&m_refCount, 1);
 	}
-    extern(System) public override uint Release()
+    override uint Release()
 	{
         int lRef = atomicOp!"-="(*cast(shared)&m_refCount, 1);
         if (lRef == 0)

@@ -34,9 +34,8 @@ void main()
 			frameCount++;
 		};
 	}
-	class FrameCompletionCallback : IDeckLinkVideoOutputCallback
+	class FrameCompletionCallback : ComObj, IDeckLinkVideoOutputCallback
 	{
-		mixin SimpleIUnknownImpl;
 	public:
 		override HRESULT ScheduledFrameCompleted(IDeckLinkVideoFrame completedFrame, in BMDOutputFrameCompletionResult result)
 		{

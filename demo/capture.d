@@ -48,9 +48,8 @@ void main()
 	input.DoesSupportVideoMode(bmdModeHD1080i50, bmdFormat8BitYUV, 0, &support, resultMode.outArg);
 	writefln("support 1080i50: %s", support);
 	
-	auto cb = new class IDeckLinkInputCallback
+	auto cb = new class ComObj, IDeckLinkInputCallback
 		{
-			mixin SimpleIUnknownImpl;
 		public:
     		override HRESULT VideoInputFormatChanged(in BMDVideoInputFormatChangedEvents notificationEvents, IDeckLinkDisplayMode newDisplayMode, in BMDDetectedVideoInputFormatFlags detectedSignalFlags)
     		{
