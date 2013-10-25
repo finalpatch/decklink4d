@@ -34,12 +34,14 @@ else
 // *************************** COM helper classes
 struct ComPtr(T)
 {
-    // takes ownership
-    this(T o)
+    // takes ownership by default
+    this(T o, bool addref = false)
     {
         obj = o;
         if (!isNull)
         {
+			if (addref)
+				obj.AddRef();
             trace("comobj %s: %s", T.stringof, &obj);
         }
     }
