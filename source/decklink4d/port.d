@@ -101,14 +101,30 @@ version(OSX)
         CFIndex CFStringGetLength(CFStringRef theString);
         CFIndex CFStringGetMaximumSizeForEncoding(CFIndex length, CFStringEncoding encoding);
         Boolean CFStringGetCString(CFStringRef theString, char *buffer, CFIndex bufferSize, CFStringEncoding encoding);
+		const char* CFStringGetCStringPtr (CFStringRef theString, CFStringEncoding encoding);
         void CFRelease(CFTypeRef cf);
     }
-    string consume(CFStringRef cfstr)
+    string consume(ref CFStringRef cfstr)
     {
-        size_t len = 1 + CFStringGetMaximumSizeForEncoding(CFStringGetLength(cfstr), kCFStringEncodingASCII);
-        char[] buf = new char[len];
-        CFStringGetCString(cfstr, buf.ptr, len, kCFStringEncodingASCII);
-        CFRelease(cfstr);
+		if (!cfstr)
+			return "";
+
+		scope(exit)
+		{
+            CFRelease(cfstr);
+			cfstr = null;
+		}
+
+		immutable encoding = kCFStringEncodingMacRoman;
+
+		auto p = CFStringGetCStringPtr(cfstr, encoding);
+		size_t len = CFStringGetLength(cfstr);
+		
+		if (p)
+			return p[0..len].idup;
+
+        char[] buf = new char[1 + CFStringGetMaximumSizeForEncoding(len, encoding)];
+        CFStringGetCString(cfstr, buf.ptr, buf.length, encoding);
         return buf[0..$-1].idup;
     }
 }
@@ -119,10 +135,16 @@ version(Windows)
     alias BSTR BMDSTR;
     extern(Windows) uint SysStringLen(BSTR bstr);
     extern(Windows) uint SysFreeString(BSTR bstr);
-    string consume(BSTR bstr)
+    string consume(ref BSTR bstr)
     {
+		if (!bstr)
+			return "";
+		
         scope(exit)
+		{
             SysFreeString(bstr);
+			bstr = null;
+		}
         return std.utf.toUTF8(bstr[0 .. SysStringLen(bstr)]);
     }
 }
