@@ -42,7 +42,7 @@ struct ComPtr(T)
         {
 			if (addref)
 				obj.AddRef();
-            trace("comobj %s: %s", T.stringof, &obj);
+            trace("comobj %s: %s", T.stringof, cast(void*)obj);
         }
     }
     ~this()
@@ -50,7 +50,7 @@ struct ComPtr(T)
         if (!isNull)
         {
             auto count = obj.Release();
-            trace("destructing %s: %s => %s", T.stringof, &obj, count);
+            trace("destructing %s: %s => %s", T.stringof, cast(void*)obj, count);
         }
     }
     this(this)
@@ -58,7 +58,7 @@ struct ComPtr(T)
         if (!isNull)
         {
             auto count = obj.AddRef();
-            trace("postblt %s: %s => %s", T.stringof, &obj, count);
+            trace("postblt %s: %s => %s", T.stringof, cast(void*)obj, count);
         }
     }
     @property bool isNull()
@@ -90,7 +90,7 @@ struct ComPtr(T)
         if (!isNull)
         {
             auto count = obj.Release();
-            trace("destructing %s: %s => %s", T.stringof, &obj, count);
+            trace("destructing %s: %s => %s", T.stringof, cast(void*)obj, count);
         }
         return &obj;
     }
