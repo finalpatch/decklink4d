@@ -85,6 +85,11 @@ struct ComPtr(T)
     }
     @property T* outArg()
     {
+        if (!isNull)
+        {
+            auto count = obj.Release();
+            trace("destructing %s: %s => %s", T.stringof, &obj, count);
+        }
         return &obj;
     }
 private:
